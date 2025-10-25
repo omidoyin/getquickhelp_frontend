@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { FiSearch, FiMapPin, FiBell, FiMenu, FiX } from 'react-icons/fi';
+import { toast } from 'react-hot-toast';
 
 // Mock data for categories
 const categories = [
@@ -23,14 +25,41 @@ const topProviders = [
 ];
 
 export default function Home() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [location, setLocation] = useState('Nearby');
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle search logic here
-    console.log('Searching for:', searchQuery);
+    if (searchQuery.trim()) {
+      // Navigate to search results with query
+      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+    } else {
+      toast.error('Please enter a search term');
+    }
+  };
+
+  const handleCategoryClick = (categoryId: number, categoryName: string) => {
+    setSelectedCategory(categoryId);
+    // Navigate to category page or filter providers
+    router.push(`/providers?category=${encodeURIComponent(categoryName.toLowerCase())}`);
+  };
+
+  const handleSeeAllProviders = () => {
+    router.push('/providers');
+  };
+
+  const handleBookNow = (providerId: number, providerName: string) => {
+    // Navigate to booking page with provider details
+    router.push(`/book/${providerId}?name=${encodeURIComponent(providerName)}`);
+  };
+
+  const handleLocationSelect = (newLocation: string) => {
+    setLocation(newLocation);
+    // You can add location-based filtering logic here
+    toast.success(`Location set to ${newLocation}`);
   };
 
   return (
@@ -48,9 +77,14 @@ export default function Home() {
             <h1 className="text-xl font-bold text-primary">QuickHelp</h1>
           </div>
           <div className="flex items-center space-x-4">
-            <button className="p-2 text-foreground/80 hover:text-foreground">
+            <a 
+              href="/notifications" 
+              className="p-2 text-foreground/80 hover:text-foreground relative"
+            >
               <FiBell size={20} />
-            </button>
+              {/* Unread indicator */}
+              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            </a>
           </div>
         </div>
 
@@ -73,9 +107,9 @@ export default function Home() {
           <div className="flex items-center mb-4">
             <FiMapPin className="text-primary mr-2" />
             <select 
-              className="bg-transparent text-sm font-medium focus:outline-none"
+              className="bg-transparent text-sm font-medium focus:outline-none cursor-pointer"
               value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              onChange={(e) => handleLocationSelect(e.target.value)}
             >
               <option value="Nearby">Nearby</option>
               <option value="Home">Home</option>
@@ -108,7 +142,12 @@ export default function Home() {
             {categories.map((category) => (
               <button
                 key={category.id}
-                className="flex flex-col items-center p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-colors"
+                onClick={() => handleCategoryClick(category.id, category.name)}
+                className={`flex flex-col items-center p-4 rounded-xl shadow-sm transition-all ${
+                  selectedCategory === category.id 
+                    ? 'bg-primary/10 border border-primary' 
+                    : 'bg-white hover:shadow-md'
+                }`}
               >
                 <span className="text-2xl mb-2">{category.icon}</span>
                 <span className="text-xs text-center text-black">{category.name}</span>
@@ -121,7 +160,12 @@ export default function Home() {
         <section className="mb-8">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">Top Trusted Near You</h2>
-            <button className="text-sm text-primary">See All</button>
+            <button 
+              onClick={handleSeeAllProviders}
+              className="text-sm text-primary hover:underline"
+            >
+              See All
+            </button>
           </div>
           <div className="space-y-4">
             {topProviders.map((provider) => (
@@ -138,7 +182,10 @@ export default function Home() {
                       <span className="text-sm ml-1">{provider.rating}</span>
                     </div>
                   </div>
-                  <button className="bg-primary text-white px-4 py-2 rounded-lg text-sm">
+                  <button 
+                    onClick={() => handleBookNow(provider.id, provider.name)}
+                    className="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-primary/90 transition-colors"
+                  >
                     Book
                   </button>
                 </div>

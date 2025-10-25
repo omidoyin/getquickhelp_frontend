@@ -220,16 +220,16 @@ export default function ProfilePage() {
                   <h2 className="text-xl font-bold">{userData.name}</h2>
                   {renderVerificationBadge()}
                 </div>
-                <p className="text-sm text-foreground/80">{userData.email}</p>
-                <p className="text-sm text-foreground/80 flex items-center mt-1">
+                <p className="text-sm text-foreground-80">{userData.email}</p>
+                <p className="text-sm text-foreground-80 flex items-center mt-1">
                   <FiMapPin className="mr-1 flex-shrink-0" size={12} /> 
                   <span className="truncate max-w-[180px]">{userData.location}</span>
                 </p>
                 <div className="flex items-center mt-1">
                   <div className="text-yellow-400 flex items-center">
                     <FiStar className="fill-current" size={14} />
-                    <span className="text-foreground/80 text-sm ml-1">{userData.rating.toFixed(1)}</span>
-                    <span className="text-foreground/50 text-xs ml-1">({userData.reviews})</span>
+                    <span className="text-foreground-80 text-sm ml-1">{userData.rating.toFixed(1)}</span>
+                    <span className="text-foreground-50 text-xs ml-1">({userData.reviews})</span>
                   </div>
                 </div>
               </div>
@@ -253,7 +253,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="ml-3">
                   <p className="font-medium text-foreground/90">Trust Level</p>
-                  <p className="text-xs text-foreground/60">
+                  <p className="text-xs text-foreground-60">
                     {trustScore >= 90 
                       ? 'Elite Trusted' 
                       : trustScore >= 75 
@@ -271,7 +271,7 @@ export default function ProfilePage() {
                   </span>
                   <span className="ml-1">{trustScore}%</span>
                 </div>
-                <p className="text-xs text-foreground/60">
+                <p className="text-xs text-foreground-60">
                   {userType === 'provider' ? 'Provider Score' : 'User Score'}
                 </p>
               </div>
@@ -286,7 +286,7 @@ export default function ProfilePage() {
                 }}
               ></div>
             </div>
-            <p className="text-xs mt-2 text-foreground/60">
+            <p className="text-xs mt-2 text-foreground-60">
               {userType === 'provider' 
                 ? trustScore >= 90 
                   ? '🌟 Top-rated provider! Keep up the great work!' 

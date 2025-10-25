@@ -18,7 +18,9 @@ import {
   FiMessageSquare,
   FiStar,
   FiTrendingUp,
-  FiUser
+  FiUser,
+  FiCheckCircle,
+  FiSettings
 } from 'react-icons/fi';
 
 interface User {
